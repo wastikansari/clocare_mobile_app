@@ -1,5 +1,7 @@
+import 'package:clocare/backend/api/package_api.dart';
+import 'package:clocare/routes/routes.dart';
 import 'package:clocare/screen/basket/steps/address_page.dart';
-import 'package:clocare/screen/home/steper/payment_page.dart';
+import 'package:clocare/screen/home/service_details_screen.dart';
 import 'package:clocare/screen/package/package_screen.dart';
 import 'package:clocare/screen/package/stepper/package_details_page.dart';
 import 'package:clocare/screen/package/stepper/package_first_page.dart';
@@ -7,13 +9,16 @@ import 'package:clocare/screen/package/stepper/package_payment_page.dart';
 import 'package:clocare/screen/package/stepper/pickup_slot_page.dart';
 import 'package:clocare/screen/widget/app_bar_widget.dart';
 import 'package:clocare/screen/widget/bottom_navigation_btn.dart';
+import 'package:clocare/screen/widget/custom_dialog.dart';
 import 'package:clocare/screen/widget/show_custom_snackbar.dart';
 import 'package:clocare/screen/widget/size_box.dart';
 import 'package:clocare/screen/widget/small_text.dart';
 import 'package:clocare/screen/widget/whatsapp_btn.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconly/iconly.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:stepper_a/stepper_a.dart';
 import '../../backend/model/package_model.dart';
 import '../../utiles/themes/ColorConstants.dart';
@@ -29,30 +34,144 @@ class PackageCheckoutScreen extends StatefulWidget {
 
 class _PackageCheckoutScreenState extends State<PackageCheckoutScreen> {
   StepperAController controller = StepperAController();
+  PackageApi packageApi = PackageApi();
 
   String pickupformatAddress = '';
-
+  String pickupAddressId = '';
   Map pickupSlotData = {};
-
   var startDate = '';
   var endDate = '';
   var payType = '';
-    double totalBill = 0;
+  double walletBalance = 0;
+  double totalBill = 0;
+  String selectPaymentType = '';
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     DateTime currentDate = DateTime.now();
-    DateTime expirationDate =DateTime(currentDate.year, currentDate.month + 1, currentDate.day);
+    DateTime expirationDate =
+        DateTime(currentDate.year, currentDate.month + 1, currentDate.day);
 
     setState(() {
+      totalBill = double.parse(widget.packageData.prices.toString());
       startDate = DateFormat('dd-MMM-yyyy').format(currentDate);
       endDate = DateFormat('dd-MMM-yyyy').format(expirationDate);
     });
   }
 
+  buyPackage() async {
+    String packageId = widget.packageData.sId.toString();
+    String addressId = pickupAddressId;
+    String pickupAddress = pickupformatAddress;
+    String email = '';
+    String packageValid = widget.packageData.valid.toString();
+    String packagePrices = widget.packageData.prices.toString();
+    String pickupDay = pickupSlotData['pickup_day'];
+    String pickupSlot = pickupSlotData['pickup_time'];
+    String delivery = pickupSlotData['delivery'];
+    String amountPay = '1575';
+    String paymentStatus = 'Paid';
+    String paymentType = selectPaymentType;
+    String transactionId = 'WAS23434';
 
+    await packageApi
+        .packageBuy(
+            packageId,
+            addressId,
+            pickupAddress,
+            email,
+            packageValid,
+            packagePrices,
+            pickupDay,
+            pickupSlot,
+            delivery,
+            amountPay,
+            paymentStatus,
+            paymentType,
+            transactionId)
+        .then(
+      (value) {
+        if (value == true) {
+          String msg = value.msg.toString();
+          orderPlaceSucessfulMsg(msg);
+        }
+      },
+    );
+  }
+
+  confermationBox() {
+    print('dddddddddddddddddddddd');
+    showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) => AlertDialog(
+        backgroundColor: AppColor.boxColor,
+        // shape: Border.all(color: Colors.white),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(6))),
+        elevation: 10,
+        title: const Text('Proceed'),
+        content: SizedBox(
+          height: 80,
+          child: Column(
+            children: [
+              SmallText(
+                text: 'Are you sure you want to buy this package ${widget.packageData.packageName.toString()}?',
+                overFlow: TextOverflow.visible,
+                color: AppColor.appBarColor,
+              ),
+              const Height(10),
+              SmallText(
+                text: 'The amount is non-refundable once you purchase this package.',
+                overFlow: TextOverflow.visible,
+                color: AppColor.appBarColor,
+              )
+            ],
+          ),
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              AletBtn(
+                text: 'Cancel',
+                bg: AppColor.backgroundColor,
+                textColor: AppColor.appBarColor,
+                onTap: () => Navigator.pop(context, 'OK'),
+              ),
+              AletBtn(
+                text: 'Pay',
+                bg: AppColor.primaryColor1,
+                textColor: Colors.white,
+                onTap: () {
+                  Navigator.pop(context, 'OK');
+                  buyPackage();
+                },
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  orderPlaceSucessfulMsg(msg) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => CustomDialog(
+        image: Lottie.asset('asset/svg/success_icon.json', height: 300),
+        title: "Thank You",
+        description: msg,
+        buttonText: "Order Tracking",
+        buttonTap: () {
+          Get.toNamed(Routes.bottomNavigation);
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +188,13 @@ class _PackageCheckoutScreenState extends State<PackageCheckoutScreen> {
             const Height(20),
             Expanded(
               child: StepperA(
-                stepperSize: const Size(350, 80),
+                step: StepA(
+                    currentStepColor: Colors.green,
+                    completeStepColor: AppColor.primaryColor1,
+                    inactiveStepColor: AppColor.primaryColorDark,
+                    // loadingWidget: CircularProgressIndicator(color: Colors.green,),
+                    margin: const EdgeInsets.all(5)),
+                stepperSize: const Size(360, 100),
                 borderShape: BorderShape.circle,
                 stepperAxis: Axis.horizontal,
                 lineType: LineType.dotted,
@@ -77,29 +202,32 @@ class _PackageCheckoutScreenState extends State<PackageCheckoutScreen> {
                 stepHeight: 35,
                 stepWidth: 35,
                 stepBorder: true,
-                pageSwipe: true,
+                pageSwipe: false,
                 formValidation: true,
                 stepperAController: controller,
                 customSteps: const [
-                  CustomSteps(stepsIcon: IconlyLight.buy, title: "Package"),
+                  CustomSteps(stepsIcon: IconlyLight.buy, title: "Orders"),
                   CustomSteps(
                       stepsIcon: Icons.location_on_outlined, title: "Address"),
-                  CustomSteps(stepsIcon: Icons.history, title: "P/D Slot"),
+                  CustomSteps(stepsIcon: Icons.history, title: "P/D slot"),
                   CustomSteps(
                       stepsIcon: Icons.outbox_rounded, title: "Details"),
-                  CustomSteps(stepsIcon: Icons.wallet, title: "Payment"),
+                  CustomSteps(stepsIcon: Icons.wallet, title: "   pay"),
+
+                  // CustomSteps(stepsIcon: IconlyLight.buy, title: "Package"),
+                  // CustomSteps(
+                  //     stepsIcon: Icons.location_on_outlined, title: "Address"),
+                  // CustomSteps(stepsIcon: Icons.history, title: "P/D Slot"),
+                  // CustomSteps(
+                  //     stepsIcon: Icons.outbox_rounded, title: "Details"),
+                  // CustomSteps(stepsIcon: Icons.wallet, title: "   Pay"),
                 ],
-                step: StepA(
-                    currentStepColor: Colors.green,
-                    completeStepColor: AppColor.primaryColor1,
-                    inactiveStepColor: Colors.black54,
-                    // loadingWidget: CircularProgressIndicator(color: Colors.green,),
-                    margin: const EdgeInsets.all(5)),
                 stepperBodyWidget: [
                   packagePlan(packageData: widget.packageData),
                   AddressPage(
                     callback: (data) {
                       pickupformatAddress = data['addressName'];
+                      pickupAddressId = data['addressId'];
                       print('addddddddddddddr $data');
                     },
                   ),
@@ -117,21 +245,22 @@ class _PackageCheckoutScreenState extends State<PackageCheckoutScreen> {
                     startDate: startDate,
                     endDate: endDate,
                   ),
-                   PackagePaymentPage(
-                  callback: (value) {
-                    payType = value;
-                    print('pppppppppp $payType');
-                  },
-                  amount: totalBill.toString(),
-                ),
+                  PackagePaymentPage(
+                    callback: (data) {
+                      payType = data['selectPayType'];
+                      selectPaymentType = data['selectPayType'];
+                      walletBalance = data['wallet_balances'];
+                      print(
+                          'pppppppppp $payType and $walletBalance and pac $totalBill');
+                    },
+                    amount: totalBill.toString(),
+                  ),
                 ],
               ),
             )
           ],
         ),
         bottomNavigationBar: BottomNavigationBtn(backOntap: () {
-          print(
-              'data back and ${pickupSlotData['pickup_day']} and ${pickupSlotData['pickup_time']} and ${pickupSlotData['delivery']} ');
           controller.back(
             onTap: (currentIndex) {
               print('ttttttt $currentIndex');
@@ -140,22 +269,28 @@ class _PackageCheckoutScreenState extends State<PackageCheckoutScreen> {
         }, nextOntap: () {
           controller.next(
             onTap: (currentIndex) {
-              print('currentIndex top $currentIndex');
               setState(() {});
               switch (currentIndex) {
                 case 0:
                   controller.next(
                     onTap: (currentIndex) {},
                   );
-                  print('currentIndex $currentIndex and 0');
+
                   break;
                 case 1:
-                  controller.next(
-                    onTap: (currentIndex) {},
-                  );
-                  print('currentIndex $currentIndex and 1');
+                  if (pickupAddressId.isNotEmpty) {
+                    controller.next(
+                      onTap: (currentIndex) {},
+                    );
+                  } else {
+                    showCustomSnackBar(
+                        title: 'Address', 'Please select pickup address');
+                    controller.back(
+                      onTap: (currentIndex) {},
+                    );
+                  }
+
                 case 2:
-                  print('call 1 $currentIndex');
                   if (pickupSlotData['pickup_day'] == null ||
                       pickupSlotData['pickup_day'] == '') {
                     showCustomSnackBar(
@@ -163,15 +298,11 @@ class _PackageCheckoutScreenState extends State<PackageCheckoutScreen> {
                     controller.back(
                       onTap: (currentIndex) {},
                     );
-
-                    print(
-                        'call 2 $currentIndex and ${pickupSlotData['pickup_day']} and ${pickupSlotData['pickup_time']} and ${pickupSlotData['delivery']} ');
                   } else if (pickupSlotData['pickup_time'] == null ||
                       pickupSlotData['pickup_time'] == '') {
                     showCustomSnackBar(
                         title: 'Pickup Time', 'Please select pickup time');
-                    print(
-                        'call 3 $currentIndex and ${pickupSlotData['pickup_day']} and ${pickupSlotData['pickup_time']} and ${pickupSlotData['delivery']} ');
+
                     controller.back(
                       onTap: (currentIndex) {},
                     );
@@ -179,8 +310,7 @@ class _PackageCheckoutScreenState extends State<PackageCheckoutScreen> {
                       pickupSlotData['delivery'] == '') {
                     showCustomSnackBar(
                         title: 'Delivery', 'Please select delivery type');
-                    print(
-                        'call 4 $currentIndex and ${pickupSlotData['pickup_day']} and ${pickupSlotData['pickup_time']} and ${pickupSlotData['delivery']} ');
+
                     controller.back(
                       onTap: (currentIndex) {},
                     );
@@ -189,29 +319,27 @@ class _PackageCheckoutScreenState extends State<PackageCheckoutScreen> {
                       onTap: (currentIndex) {},
                     );
                   }
+
+                case 4:
+                  if (selectPaymentType.isEmpty) {
+                    print('case 4 $selectPaymentType');
+                    showCustomSnackBar(
+                        title: 'Payment Option',
+                        'Please select payment option');
+                    controller.back(
+                      onTap: (currentIndex) {},
+                    );
+                  } else if (selectPaymentType == 'Wallet pay') {
+                    showCustomSnackBar(
+                        title: 'Wallet', 'Your wallet balance is low');
+                  } else {
+                    confermationBox();
+                  }
                 default:
                   controller.next(
                     onTap: (currentIndex) {},
                   );
               }
-
-              // if (timeslotData['pickup_day'] == null && timeslotData['pickup_slot'] == null && currentIndex == 2) {
-              //   showCustomSnackBar(title: 'Pickup Day','Please select pickup Day and Time');
-              //   print('pdddddddddddd ${timeslotData['pickup_day'] == null} and ${timeslotData['pickup_slot'] ==null}  and ${currentIndex == 2}}');
-              //   controller.back(
-              //     onTap: (currentIndex) {},
-              //   );
-              // }
-              //  print('pdddddddddddd ${timeslotData['pickup_day'] == null} and ${timeslotData['pickup_slot'] ==null}  and ${currentIndex == 2}}');
-              // else if (timeslotData['pickup_slot'] == null &&
-              //     currentIndex == 2) {
-              //   showCustomSnackBar(
-              //       title: 'Pickup Time',
-              //       'Please select pickup time');
-              //   controller.back(
-              //     onTap: (currentIndex) {},
-              //   );
-              // }
             },
           );
         }));
@@ -235,8 +363,13 @@ class PackBox extends StatelessWidget {
         SmallText(
           text: title,
           color: AppColor.backgroundColor,
+          size: 14,
         ),
-        SmallText(text: value, color: AppColor.backgroundColor),
+        SmallText(
+          text: value,
+          color: AppColor.backgroundColor,
+          size: 14,
+        ),
       ],
     );
   }

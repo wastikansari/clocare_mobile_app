@@ -57,18 +57,18 @@ class _TimeSlotPageState extends State<TimeSlotPage> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(12),
       child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            textSlot(
-              currentMonthe: currentMonthe,
-              title: 'Pickup slot',
-            ),
-            const Height(15),
+            // textSlot(
+            //   currentMonthe: currentMonthe,
+            //   title: 'Pickup slot',
+            // ),
+            // const Height(15),
             Container(
-                height: 160,
+                // height: 160,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: AppColor.boxColor,
@@ -87,6 +87,11 @@ class _TimeSlotPageState extends State<TimeSlotPage> {
                   padding: const EdgeInsets.all(10),
                   child: Column(
                     children: [
+                      textSlot(
+                        currentMonthe: currentMonthe,
+                        title: 'Pickup slot',
+                      ),
+                      const Height(15),
                       SizedBox(
                         height: 60,
                         child: ListView.builder(
@@ -194,13 +199,9 @@ class _TimeSlotPageState extends State<TimeSlotPage> {
                   ),
                 )),
             const Height(25),
-            textSlot(
-              currentMonthe: currentMonthe,
-              title: 'Delivery slot',
-            ),
-            const Height(15),
+
             Container(
-                height: 160,
+                // height: 160,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: AppColor.boxColor,
@@ -217,9 +218,14 @@ class _TimeSlotPageState extends State<TimeSlotPage> {
                   ],
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(12),
                   child: Column(
                     children: [
+                      textSlot(
+                        currentMonthe: currentMonthe,
+                        title: 'Delivery slot',
+                      ),
+                      const Height(15),
                       SizedBox(
                         height: 60,
                         child: ListView.builder(
@@ -374,7 +380,9 @@ class timeSlot extends StatelessWidget {
               SmallText(
                 text: timeslot,
                 size: 11,
-                color: bgColor ==  AppColor.primaryColor1Greey ? AppColor.boxColor : AppColor.appBarColor,
+                color: bgColor == AppColor.primaryColor1Greey
+                    ? AppColor.boxColor
+                    : AppColor.appBarColor,
                 fontweights: FontWeight.w500,
               ),
             ],

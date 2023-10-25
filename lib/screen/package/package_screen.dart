@@ -47,9 +47,9 @@ class _PackageScreenState extends State<PackageScreen> {
                           padding: const EdgeInsets.all(10),
                           child: PackageBox(
                             title: packageData.packageName!,
-                            code: " (${packageData.packageCode}) ",
+                            code: " ${packageData.packageCode}",
                             pricing: "₹${packageData.prices}",
-                            validity: packageData.valid!,
+                            validity: "${packageData.valid!} day",
                             garments: packageData.routineGarments!,
                             buyPlan: () {
                               Get.to(
@@ -184,31 +184,32 @@ class _PackageBoxState extends State<PackageBox> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      SmallText(
+                        text: widget.title,
+                        size: 18,
+                        color: Colors.white,
+                        fontweights: FontWeight.w500,
+                      ),
+                      const Height(5),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           SmallText(
-                            text: widget.title,
-                            size: 18,
+                            text: 'Package code :',
+                            //'₹1,575 / Months',
+                            size: 11,
                             color: Colors.white,
-                            fontweights: FontWeight.w500,
                           ),
                           SmallText(
                             text: widget.code,
-                            size: 14,
+                            size: 11,
                             color: Colors.white,
                             fontweights: FontWeight.w400,
                           ),
                         ],
                       ),
                       const Height(4),
-                      SmallText(
-                        text: 'Package',
-                        //'₹1,575 / Months',
-                        size: 10,
-                        color: Colors.white,
-                      ),
                     ],
                   ),
                   InkWell(

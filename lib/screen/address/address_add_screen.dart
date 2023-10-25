@@ -104,7 +104,8 @@ class _AddressAddScreenState extends State<AddressAddScreen> {
       setState(() {
         isLoadingButton = true;
       });
-      await addressApi.addressCreate(
+      await addressApi
+          .addressCreate(
         flatNo,
         street,
         landMark,
@@ -319,7 +320,7 @@ class _AddressAddScreenState extends State<AddressAddScreen> {
                 ),
                 const Height(20),
                 CustomTextField1(
-                  hintText: 'Room no',
+                  hintText: 'Hous no / Flat no',
                   icon: Icons.room,
                   controller: flatController,
                 ),
@@ -465,4 +466,3 @@ class BoxType extends StatelessWidget {
     );
   }
 }
-

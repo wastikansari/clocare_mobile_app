@@ -19,9 +19,7 @@ class ProfileApi {
       },
     );
 
-    print("rrrrrrrrrrrrrrr p1 ${response.body}");
     if (response.statusCode == 200) {
-      print("rrrrrrrrrrrrrrr  p2 ${response.body}");
       return ProfileModel.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to load User');
@@ -34,7 +32,6 @@ class ProfileApi {
     gender,
     dob,
   ) async {
-    print('profileUpdate');
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(AppConstants.TOKEN)!;
     final response = await http.post(
@@ -51,17 +48,16 @@ class ProfileApi {
       }),
     );
 
-    print("rrrrrrrrrrrrrrr p1 ${response.body}");
     if (response.statusCode == 200) {
-      print("rrrrrrrrrrrrrrr  p2 ${response.body}");
       return StatusModel.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to load User');
     }
   }
 
-  Future<StatusModel> emailUpdate( email,) async {
-    print('profileUpdate');
+  Future<StatusModel> emailUpdate(
+    email,
+  ) async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(AppConstants.TOKEN)!;
     final response = await http.post(
@@ -75,9 +71,7 @@ class ProfileApi {
       }),
     );
 
-    print("rrrrrrrrrrrrrrr p1 ${response.body}");
     if (response.statusCode == 200) {
-      print("rrrrrrrrrrrrrrr  p2 ${response.body}");
       return StatusModel.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to load User');

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:clocare/backend/model/order_model.dart';
 import 'package:clocare/backend/model/status_model.dart';
 import 'package:clocare/utiles/app_constants.dart';
 import 'package:http/http.dart' as http;
@@ -69,8 +70,6 @@ class OrderApi {
       deliveryTime,
       pickupAddressId,
       ordStatus) async {
-    print('DDDDDDDDDDDDDDDDD $orderType and $noOfServic, $serviceName, $items, $paymentType, $paymentStatus, $amount, $pickupDate, $pickupTime, $deliveryDate, $deliveryTime, $pickupAddressId');
-    print('itemsList $itemsList');
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(AppConstants.TOKEN)!;
     final response = await http.post(
@@ -98,12 +97,28 @@ class OrderApi {
       }),
     );
 
-    print('resulst ${response.body}');
     logDev.log('final dataaa ${response.body}');
 
-    print('ddddddddddddddddd ${response.body}');
     if (response.statusCode == 200) {
       return StatusModel.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load User');
+    }
+  }
+
+  Future<OrderModel> orderList() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(AppConstants.TOKEN)!;
+    final response = await http.get(
+      Uri.parse(url + AppConstants.ORDER_LIST_URL),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      return OrderModel.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to load User');
     }

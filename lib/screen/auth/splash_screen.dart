@@ -42,6 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
       Get.offAllNamed(Routes.bottomNavigation);
     } else {
        Get.offAllNamed(Routes.intro);
+      // Get.offAllNamed(Routes.onBoardingScreen);
     }
   }
 

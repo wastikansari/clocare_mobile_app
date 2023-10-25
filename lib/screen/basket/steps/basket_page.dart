@@ -71,7 +71,7 @@ class _BasketDataState extends State<BasketData> {
             width: double.infinity,
             decoration: BoxDecoration(
               color: AppColor.boxColor,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(11),
               border: Border.all(color: AppColor.primaryColor1, width: 1),
             ),
             child: Column(
@@ -85,12 +85,12 @@ class _BasketDataState extends State<BasketData> {
                     padding: const EdgeInsets.all(15),
                     child: Column(children: [
                       TextBox(
-                        title: 'Basket total:',
+                        title: 'Order Amount:',
                         value: '₹$totalPrice',
                       ),
                       const Height(8),
                       TextBox(
-                        title: 'Items:',
+                        title: 'Total Clothes:',
                         value: item,
                       ),
                       const Height(8),
@@ -106,7 +106,8 @@ class _BasketDataState extends State<BasketData> {
                   child: ListView.builder(
                     itemCount: basketBox.get('BASKETLIST')[0].length,
                     itemBuilder: (context, serviceIndex) {
-                      final service =  basketBox.get('BASKETLIST')[0][serviceIndex];
+                      final service =
+                          basketBox.get('BASKETLIST')[0][serviceIndex];
                       final serviceName = service['service_name'];
                       final gtypes = service['gtype'];
                       final image = service['service_icon'].toString();
@@ -184,7 +185,11 @@ class _BasketDataState extends State<BasketData> {
                                           CrossAxisAlignment.center,
                                       children: [
                                         SmallText(text: 'Price: $price'),
-                                        SmallText(text: 'qtn: $qtn'),
+                                        SmallText(
+                                          text: 'Qty: $qtn',
+                                          color: AppColor.primaryColor1Greey,
+                                          size: 12,
+                                        ),
                                         // Text('Price: $price, qtn: $qtn'),
                                       ],
                                     ),

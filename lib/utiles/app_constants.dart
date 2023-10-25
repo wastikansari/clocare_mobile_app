@@ -4,7 +4,8 @@ class AppConstants {
 
   static String TOKEN = 'token';
 
-  static const String BASE_URL = "http://192.168.29.178:30002";
+  static const String BASE_URL = "http://sub.theclo.care";
+  //"http://192.168.29.178:30002";
   static const String OTP_VERIFICATION_URL = "/api/send-otp";
   static const String NUMBER_CHECK_URL = "/api/check-mobile";
   static const String REGISTRATION_URL = "/api/register";
@@ -27,9 +28,11 @@ class AppConstants {
   // order place
   static const String SERVICE_ORDER_PLACE_URL = '/api/customer/service/order/create';
   static const String BASKET_ORDER_PLACE_URL = '/api/customer/basket/order/create';
+  static const String ORDER_LIST_URL = '/api/customer/order/list';
 
   // package url
   static const String PACKAGE_LIST_URL = '/api/dashboard/package/list';
+  static const String PACKAGE_BUY_URL = '/api/customer/package/subscription/create';
 
   // php yii api
   static const String BASE_URL1 = "https://cc.vcantech.biz";

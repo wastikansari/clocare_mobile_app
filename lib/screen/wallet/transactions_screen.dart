@@ -35,15 +35,15 @@ class _TransactionsScreenState extends State<TransactionsScreen>
     return CustomFold(
       appBar: 'Transactions',
       isShowBack: true,
-      leading: IconButton(
-          padding: const EdgeInsets.all(6),
-          constraints: const BoxConstraints(),
-          onPressed: () {},
-          icon: Icon(
-            Icons.more_vert,
-            color: AppColor.backgroundColor,
-            size: 25,
-          )),
+      // leading: IconButton(
+      //     padding: const EdgeInsets.all(6),
+      //     constraints: const BoxConstraints(),
+      //     onPressed: () {},
+      //     icon: Icon(
+      //       Icons.more_vert,
+      //       color: AppColor.backgroundColor,
+      //       size: 25,
+      //     )),
       bodys: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -86,171 +86,185 @@ class _TransactionsScreenState extends State<TransactionsScreen>
                 controller: _tabController,
                 children: [
                   // Tabbar1
-                  SingleChildScrollView(
-                    child: Padding(
-                        padding: const EdgeInsets.only(
-                          left: 10,
-                          right: 10,
-                          bottom: 20,
-                        ),
-                        child: FutureBuilder<TransactionModel>(
-                            future: walletApi.transactionApi(),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                var allData = snapshot.data!.data!.customer;
-                                print('ddddddddddddddd ${allData!.length}');
-                                return ListView.builder(
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    itemCount: allData.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      String input =
-                                          allData[index].createdAt!.toString();
-                                      DateTime dateTime = DateTime.parse(input);
-                                      String formattedDate =
-                                          DateFormat('dd MMM yyyy')
-                                              .format(dateTime);
-                                      String formattedTime =
-                                          DateFormat('HH:mm aa')
-                                              .format(dateTime);
-                                      return Padding(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 8),
-                                          child: Container(
-                                            // height: 90,
-                                            width: double.infinity,
-                                            decoration: BoxDecoration(
-                                                color: AppColor.boxColor,
-                                                borderRadius:
-                                                    const BorderRadius.all(
-                                                  Radius.circular(10),
-                                                ),
-                                                border: Border.all(
-                                                    color: Colors.white)),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(12),
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
+                  Center(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                          padding: const EdgeInsets.only(
+                            left: 10,
+                            right: 10,
+                            bottom: 20,
+                          ),
+                          child: FutureBuilder<TransactionModel>(
+                              future: walletApi.transactionApi(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  var allData = snapshot.data!.data!.customer;
+                  
+                                  if (allData!.isNotEmpty) {
+                                    return ListView.builder(
+                                        shrinkWrap: true,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        itemCount: allData!.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          String input = allData[index]
+                                              .createdAt!
+                                              .toString();
+                                          DateTime dateTime =
+                                              DateTime.parse(input);
+                                          String formattedDate =
+                                              DateFormat('dd MMM yyyy')
+                                                  .format(dateTime);
+                                          String formattedTime =
+                                              DateFormat('HH:mm aa')
+                                                  .format(dateTime);
+                                          return Padding(
+                                              padding: const EdgeInsets.only(
+                                                  bottom: 8),
+                                              child: Container(
+                                                // height: 90,
+                                                width: double.infinity,
+                                                decoration: BoxDecoration(
+                                                    color: AppColor.boxColor,
+                                                    borderRadius:
+                                                        const BorderRadius.all(
+                                                      Radius.circular(10),
+                                                    ),
+                                                    border: Border.all(
+                                                        color: Colors.white)),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(12),
+                                                  child: Column(
                                                     mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
+                                                        MainAxisAlignment.start,
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                        CrossAxisAlignment.start,
                                                     children: [
-                                                      SmallText(
-                                                        text: formattedDate,
-                                                        color: AppColor
-                                                            .appBarColor,
-                                                        fontweights:
-                                                            FontWeight.w400,
-                                                        size: 14,
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          SmallText(
+                                                            text: formattedDate,
+                                                            color: AppColor
+                                                                .appBarColor,
+                                                            fontweights:
+                                                                FontWeight.w400,
+                                                            size: 14,
+                                                          ),
+                                                          Row(
+                                                            children: [
+                                                              SmallText(
+                                                                text:
+                                                                    '₹${allData[index].amount!.toString()}.00',
+                                                                // size: 15,
+                                                                color:
+                                                                    Colors.green,
+                                                              ),
+                                                              // const Icon(Icons.arrow_outward, size: 15, color: Colors.redAccent,)
+                                                              const Icon(
+                                                                Icons
+                                                                    .arrow_downward,
+                                                                size: 17,
+                                                                color:
+                                                                    Colors.green,
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ],
                                                       ),
+                                                      const Height(6),
                                                       Row(
                                                         children: [
                                                           SmallText(
-                                                            text:
-                                                                '₹${allData[index].amount!.toString()}.00',
-                                                            // size: 15,
-                                                            color: Colors.green,
+                                                              text: 'Status : '),
+                                                          SmallText(
+                                                              text: allData[index]
+                                                                  .transactionType
+                                                                  .toString()),
+                                                        ],
+                                                      ),
+                                                      const Height(3),
+                                                      Row(
+                                                        children: [
+                                                          SmallText(
+                                                              text:
+                                                                  'Transactions id : '),
+                                                          SmallText(
+                                                              text: allData[index]
+                                                                  .transactionId
+                                                                  .toString()),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .spaceBetween,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .end,
+                                                        children: [
+                                                          SmallText(text: ''),
+                                                          SmallText(
+                                                            text: formattedTime,
+                                                            size: 10,
+                                                            color: Colors.grey,
                                                           ),
-                                                          // const Icon(Icons.arrow_outward, size: 15, color: Colors.redAccent,)
-                                                          const Icon(
-                                                            Icons
-                                                                .arrow_downward,
-                                                            size: 17,
-                                                            color: Colors.green,
-                                                          )
                                                         ],
                                                       ),
                                                     ],
                                                   ),
-                                                  const Height(6),
-                                                  Row(
-                                                    children: [
-                                                      SmallText(
-                                                          text: 'Status : '),
-                                                      SmallText(
-                                                          text: allData[index]
-                                                              .transactionType
-                                                              .toString()),
-                                                    ],
-                                                  ),
-                                                  const Height(3),
-                                                  Row(
-                                                    children: [
-                                                      SmallText(
-                                                          text:
-                                                              'Transactions id : '),
-                                                      SmallText(
-                                                          text: allData[index]
-                                                              .transactionId
-                                                              .toString()),
-                                                    ],
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment.end,
-                                                    children: [
-                                                      SmallText(text: ''),
-                                                      SmallText(
-                                                        text: formattedTime,
-                                                        size: 10,
-                                                        color: Colors.grey,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ));
-                                    });
-                              } else {
-                                return Center(
-                                  child:
-                                      LoadingAnimationWidget.fourRotatingDots(
-                                    color: AppColor.primaryColor2,
-                                    size: 20,
-                                  ),
-                                );
-                              }
-                            })),
+                                                ),
+                                              ));
+                                        });
+                                  } else {
+                                    return const Center(
+                                      child: Text(
+                                        'All History',
+                                        style: TextStyle(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                } else {
+                                  return Center(
+                                    child:
+                                        LoadingAnimationWidget.fourRotatingDots(
+                                      color: AppColor.primaryColor2,
+                                      size: 20,
+                                    ),
+                                  );
+                                }
+                              })),
+                    ),
                   ),
                   // Tabbar2
 
-                  Container(
-                    // color: Colors.amber,
-                    child: const Center(
-                      child: Text(
-                        'Amount credit',
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.w600,
-                        ),
+                  const Center(
+                    child: Text(
+                      'Amount credit',
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
                   // Tabbar3
 
-                  Container(
-                    // color: Colors.amber,
-                    child: const Center(
-                      child: Text(
-                        'Amount debit',
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.w600,
-                        ),
+                  const Center(
+                    child: Text(
+                      'Amount debit',
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),

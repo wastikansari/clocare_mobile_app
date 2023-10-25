@@ -3,9 +3,11 @@ import 'package:clocare/backend/api/order_api.dart';
 import 'package:clocare/routes/routes.dart';
 import 'package:clocare/screen/basket/steps/basket_page.dart';
 import 'package:clocare/screen/basket/steps/basket_payment_page.dart';
+import 'package:clocare/screen/home/service_details_screen.dart';
 import 'package:clocare/screen/home/steper/order_summary_page.dart';
 import 'package:clocare/screen/home/steper/time_slot_page.dart';
 import 'package:clocare/screen/widget/app_bar_widget.dart';
+import 'package:clocare/screen/widget/custom_dialog.dart';
 import 'package:clocare/screen/widget/show_custom_snackbar.dart';
 import 'package:clocare/screen/widget/size_box.dart';
 import 'package:clocare/screen/widget/small_text.dart';
@@ -14,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:iconly/iconly.dart';
+import 'package:lottie/lottie.dart';
 import 'package:stepper_a/stepper_a.dart';
 import 'steps/address_page.dart';
 
@@ -87,11 +90,8 @@ class _BasketCheckOutScreenState extends State<BasketCheckOutScreen> {
     final String deliveryTime = timeslotData['Delivery_time'];
     final String pickupAddressId = selectAddressId.toString();
     const String ordStatus = 'order place';
-
-    print(
-        'DDDDDDDDDDDDDDDDD $orderType and $noOfServic, $serviceName, $items, $paymentType, $paymentStatus, $amount, $pickupDate, $pickupTime, $deliveryDate, $deliveryTime, $pickupAddressId');
-    print('itemsList $itemsList');
-    await orderApi.basketOrderCreate(
+    await orderApi
+        .basketOrderCreate(
             orderType,
             noOfServic,
             serviceName,
@@ -109,23 +109,42 @@ class _BasketCheckOutScreenState extends State<BasketCheckOutScreen> {
         .then(
       (value) {
         if (value.status == true) {
+          String msg = value.msg.toString();
           setState(() {
             isLoading = false;
           });
-          print("value $value");
-          // Get.toNamed(Routes.bottomNavigation);
-          // basketBox.clear();
+
+          orderPlaceSucessfulMsg(msg);
+          Timer(const Duration(seconds: 3), () {
+            Get.toNamed(Routes.bottomNavigation);
+            basketBox.clear();
+          });
         } else {
           setState(() {
             isLoading = false;
           });
-          // errorBox();
+          errorBox();
         }
         print('ddddddddddddddddddddddddddddddddddddddddd ${value.msg}');
         setState(() {
           isLoading = false;
         });
       },
+    );
+  }
+
+  orderPlaceSucessfulMsg(msg) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => CustomDialog(
+        image: Lottie.asset('asset/svg/success_icon.json', height: 300),
+        title: "Thank You",
+        description: msg,
+        buttonText: "Order Tracking",
+        buttonTap: () {
+          Get.toNamed(Routes.bottomNavigation);
+        },
+      ),
     );
   }
 
@@ -172,7 +191,7 @@ class _BasketCheckOutScreenState extends State<BasketCheckOutScreen> {
                   onComplete: () {
                     debugPrint(
                         "Forward Button click complete step call back! $index");
-                    orderPlace();
+                    confermationBox();
                     // Get.toNamed(Routes.bottomNavigation);
                   },
                   // width:100,
@@ -212,7 +231,7 @@ class _BasketCheckOutScreenState extends State<BasketCheckOutScreen> {
                     stepsIcon: Icons.location_on_outlined, title: "Address"),
                 CustomSteps(stepsIcon: Icons.history, title: "P/D Slot"),
                 CustomSteps(stepsIcon: Icons.outbox_rounded, title: "Details"),
-                CustomSteps(stepsIcon: Icons.wallet, title: "Payment"),
+                CustomSteps(stepsIcon: Icons.wallet, title: "   Pay"),
               ],
               step: StepA(
                   currentStepColor: Colors.green,
@@ -248,6 +267,116 @@ class _BasketCheckOutScreenState extends State<BasketCheckOutScreen> {
               ],
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  errorBox() {
+    print('dddddddddddddddddddddd');
+    showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) => AlertDialog(
+        backgroundColor: AppColor.boxColor,
+        // shape: Border.all(color: Colors.white),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(6))),
+        elevation: 10,
+        title: const Text('Oopps!'),
+        content: SizedBox(
+          height: 60,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SmallText(
+                text:
+                    'You cannot place the same service order on the same day, you have already placed this order',
+                overFlow: TextOverflow.visible,
+                color: AppColor.appBarColor,
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              AletBtn(
+                text: 'Cancel',
+                bg: AppColor.backgroundColor,
+                textColor: AppColor.appBarColor,
+                onTap: () => Navigator.pop(context, 'OK'),
+              ),
+              AletBtn(
+                text: 'Ok',
+                bg: AppColor.primaryColor1,
+                textColor: Colors.white,
+                onTap: () {
+                  Get.toNamed(Routes.bottomNavigation);
+                },
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  confermationBox() {
+    print('dddddddddddddddddddddd');
+    showDialog<String>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) => AlertDialog(
+        backgroundColor: AppColor.boxColor,
+        // shape: Border.all(color: Colors.white),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(6))),
+        elevation: 10,
+        title: const Text('Proceed'),
+        content: SizedBox(
+          height: 60,
+          child: Column(
+            children: [
+              SmallText(
+                text:
+                    'You order will be delivered on ${timeslotData['Delivery_date']}',
+                overFlow: TextOverflow.visible,
+                color: AppColor.appBarColor,
+              ),
+              SmallText(
+                text: 'Do you want to proceed with provided information?',
+                overFlow: TextOverflow.visible,
+                color: AppColor.appBarColor,
+              )
+            ],
+          ),
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              AletBtn(
+                text: 'Cancel',
+                bg: AppColor.backgroundColor,
+                textColor: AppColor.appBarColor,
+                onTap: () => Navigator.pop(context, 'OK'),
+              ),
+              AletBtn(
+                text: 'Confirm',
+                bg: AppColor.primaryColor1,
+                textColor: Colors.white,
+                onTap: () {
+                  Navigator.pop(context, 'OK');
+                  orderPlace();
+                },
+              ),
+            ],
+          )
         ],
       ),
     );

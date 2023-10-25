@@ -23,7 +23,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
 
   final List<Widget> _screens = [
     const HomeScreen(),
-    const OrderScreen(),
+     OrderScreen(),
     const BasketScreen(
       visible: true,
     ),

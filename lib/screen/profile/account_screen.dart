@@ -242,9 +242,9 @@ class _AccountScreenState extends State<AccountScreen> {
                         controller: phoneNumberController,
                         readOnlys: true,
                         suffix: SmallText(
-                          text: 'verify',
+                          text: 'verifyed',
                           color: Colors.blueAccent,
-                          fontweights: FontWeight.bold,
+                          fontweights: FontWeight.w500,
                         ),
                         hintTexts: '88-33-333-333',
                       ),
@@ -255,9 +255,9 @@ class _AccountScreenState extends State<AccountScreen> {
                         readOnlys: isEditing,
                         hintTexts: 'example@gmail.com',
                         suffix: SmallText(
-                          text: isEmailVarify ? 'verify' : 'not-verify',
+                          text:  emailController.text.isNotEmpty ? 'verifyed' : 'verify',          //    isEmailVarify ? 'verifyed' : 'verify',
                           color: Colors.blueAccent,
-                          fontweights: FontWeight.bold,
+                          fontweights: FontWeight.w500,
                         ),
                       ),
                       // const Height(24),

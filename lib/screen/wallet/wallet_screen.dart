@@ -52,22 +52,56 @@ class _WalletScreenState extends State<WalletScreen> {
     getData();
   }
 
+  proceed() {
+    if (totalAmount == 0) {
+      showCustomSnackBar(
+          title: 'Add Money', "Please enter your amount to proceed");
+    } else if (totalAmount < 99) {
+      showCustomSnackBar(
+          title: 'Add Money', "Please enter minimum amount ₹100");
+    } else if (totalAmount > 99) {
+      int amount = int.parse(totalAmount.toString());
+      Get.to(
+          SecurePaymentScreen(
+            amount: amount,
+          ),
+          transition: Transition.rightToLeft);
+      // UpiPayScreen(
+      //   amount: amount,
+      // ),
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return CustomFold(
       appBar: 'Wallet',
       isShowBack: true,
-      leading: IconButton(
-          padding: const EdgeInsets.all(6),
-          constraints: const BoxConstraints(),
-          onPressed: () {
-            Get.toNamed(Routes.transactions);
-          },
-          icon: Icon(
-            Icons.more_vert,
-            color: AppColor.backgroundColor,
-            size: 25,
-          )),
+      // leading: IconButton(
+      //     padding: const EdgeInsets.all(6),
+      //     constraints: const BoxConstraints(),
+      //     onPressed: () {
+      //       print('vall popup');
+      //       PopupMenuButton(
+      //         itemBuilder: (context) {
+      //           print('dddddddddd');
+      //           return [
+      //             const PopupMenuItem(
+      //               child: Text("History"),
+      //             ),
+      //             const PopupMenuItem(
+      //               child: Text("History"),
+      //             )
+      //           ];
+      //         },
+      //       );
+      //       // Get.toNamed(Routes.transactions);
+      //     },
+      //     icon: Icon(
+      //       Icons.more_vert,
+      //       color: AppColor.backgroundColor,
+      //       size: 25,
+      //     )),
       bodys: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -195,21 +229,7 @@ class _WalletScreenState extends State<WalletScreen> {
                 padding: const EdgeInsets.all(30),
                 child: InkWell(
                     onTap: () {
-                      if (totalAmount > 0) {
-                        int amount = int.parse(totalAmount.toString());
-                        Get.to(
-                            SecurePaymentScreen(
-                              amount: amount,
-                            ),
-                            // UpiPayScreen(
-                            //   amount: amount,
-                            // ),
-                            transition: Transition.rightToLeft);
-                      } else {
-                        showCustomSnackBar(
-                            title: 'Add Money',
-                            "Please enter your amount to proceed");
-                      }
+                      proceed();
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -237,7 +257,36 @@ class _WalletScreenState extends State<WalletScreen> {
                                   )),
                       ),
                     )),
-              )
+              ),
+              const Height(35),
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: const Color.fromARGB(106, 239, 241, 254),
+                      border: Border.all(
+                          color: const Color.fromARGB(39, 68, 137, 255))),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        minimumSize: Size.zero,
+                        padding: EdgeInsets.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      onPressed: () {
+                        Get.toNamed(Routes.transactions);
+                      },
+                      child: SmallText(
+                        text: 'See all History',
+                        fontweights: FontWeight.w500,
+                        color: AppColor.primaryColor1,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

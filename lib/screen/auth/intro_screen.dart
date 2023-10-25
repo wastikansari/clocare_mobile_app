@@ -1,7 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:clocare/routes/routes.dart';
-import 'package:clocare/screen/auth/login_screen.dart';
-import 'package:clocare/screen/auth/registration_screen.dart';
 import 'package:clocare/utiles/app_asset.dart';
 import 'package:clocare/utiles/themes/ColorConstants.dart';
 import 'package:clocare/screen/widget/size_box.dart';
@@ -114,10 +112,11 @@ class _IntroScreenState extends State<IntroScreen> {
                       ),
                       child: TextButton(
                         onPressed: () {
-                          Get.toNamed(Routes.login);
+                          Get.toNamed(Routes.register);
                         },
                         child: const Text(
-                          "LOGIN",
+                          // "LOGIN",
+                          "Register",
                           style: TextStyle(
                             color: Color.fromARGB(223, 239, 241, 254),
                             fontWeight: FontWeight.bold,
@@ -126,26 +125,27 @@ class _IntroScreenState extends State<IntroScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 30.0),
+                    const SizedBox(height: 28.0),
                     RichText(
                       textAlign: TextAlign.left,
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: "Don’t have an account yet? ",
+                            text: "Already have an account? ",
                             style: TextStyle(
                               color: Colors.white70,
-                              fontSize: size.height * 0.019,
+                              fontSize: size.height * 0.020,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
                           WidgetSpan(
                             child: InkWell(
                               onTap: () {
-                                Get.toNamed(Routes.register);
+                                Get.toNamed(Routes.login);
                               },
                               child: Text(
-                                "Register",
+                                // "Register",
+                                "Login",
                                 style: TextStyle(
                                   decoration: TextDecoration.underline,
                                   decorationColor: AppColor.primaryColor2,
@@ -159,7 +159,7 @@ class _IntroScreenState extends State<IntroScreen> {
                                       const Rect.fromLTWH(
                                           0.0, 0.0, 200.0, 70.0),
                                     ),
-                                  fontSize: size.height * 0.019,
+                                  fontSize: size.height * 0.020,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -180,6 +180,7 @@ class _IntroScreenState extends State<IntroScreen> {
                                 "https://www.linkedin.com/company/clocareindia/");
                           },
                         ),
+                        const Widths(6),
                         SocialIcon(
                           icon: 'asset/images/insta.png',
                           colors: Colors.orange,
@@ -188,6 +189,7 @@ class _IntroScreenState extends State<IntroScreen> {
                                 "https://www.instagram.com/clocareindia/");
                           },
                         ),
+                        const Widths(6),
                         SocialIcon(
                           icon: 'asset/images/facebook.png',
                           colors: Color.fromARGB(255, 60, 89, 151),
@@ -236,7 +238,7 @@ class SocialIcon extends StatelessWidget {
         ),
         child: Image.asset(
           icon,
-          height: 13,
+          height: 15,
         ),
       ),
     );

@@ -284,17 +284,17 @@ class packageDetail extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             PackBox(
-              title: 'Package',
+              title: 'Package name :',
               value: packages.packageName.toString(),
             ),
             const Height(10),
             PackBox(
-              title: 'Package code',
+              title: 'Package code :',
               value: packages.packageCode.toString(),
             ),
             const Height(10),
             PackBox(
-              title: 'Total clothing',
+              title: 'No of clothes :',
               value: packages.routineGarments.toString(),
             ),
             const Height(10),

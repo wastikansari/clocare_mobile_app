@@ -10,7 +10,7 @@ class OfferScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomFold(
-        appBar: 'Orders',
+        appBar: 'Offers',
         isShowBack: true,
         bodys: SingleChildScrollView(
           child: Column(

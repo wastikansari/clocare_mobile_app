@@ -7,6 +7,7 @@ class CustomTextField extends StatelessWidget {
   final String hintTexts;
   final Function? onTaps;
   final Function(String?)? validator;
+    final Function(String?)? onChanged;
   final TextEditingController controller;
   final TextInputType? keyboardType;
 
@@ -19,7 +20,7 @@ class CustomTextField extends StatelessWidget {
     required this.hintTexts,
     this.onTaps,
     this.validator,
-    this.keyboardType,
+    this.keyboardType, this.onChanged,
   });
 
   @override
@@ -34,6 +35,7 @@ class CustomTextField extends StatelessWidget {
         style: const TextStyle(
           fontSize: 13,
         ),
+         onChanged: (val) => onChanged!(val),
         validator: (value) => validator!(value),
         decoration: InputDecoration(
           hintText: hintTexts,

@@ -1,22 +1,19 @@
-import 'dart:convert';
-
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:clocare/backend/phone_pe/phone_pe.dart';
 import 'package:clocare/payment_gateway/phonePe_payment_gateway.dart';
 import 'package:clocare/routes/routes.dart';
 import 'package:clocare/screen/home/service_details_screen.dart';
-import 'package:clocare/screen/home/steper/stepper_1.dart';
 import 'package:clocare/screen/widget/whatsapp_btn.dart';
-import 'package:clocare/testing.dart';
+import 'package:clocare/services/call_reguest.dart';
 import 'package:clocare/utiles/app_asset.dart';
 import 'package:clocare/screen/widget/size_box.dart';
 import 'package:clocare/screen/widget/small_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconly/iconly.dart';
-import 'package:lottie/lottie.dart';
-import 'package:phonepe_payment_sdk/phonepe_payment_sdk.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../../testing.dart';
 import '../../utiles/themes/ColorConstants.dart';
+import '../basket/basket_garment_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -26,6 +23,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+      CallReuest callReuest = CallReuest();
   serviceDetailScreen({required String serviceName, required int serviceId}) {
     Get.to(
         ServiceDetailScreen(
@@ -34,6 +33,23 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         transition: Transition.rightToLeft);
   }
+
+    _makePhoneCall() async {
+    const url = 'tel:+91 8141116600'; 
+    // ignore: deprecated_member_use
+    if (await canLaunch(url)) {
+      // ignore: deprecated_member_use
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SmallText(
-                              text: 'Service',
+                              text: 'Services',
                               size: 20,
                               color: Colors.black,
                               fontweights: FontWeight.bold,
@@ -208,6 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             icon:
                                 'https://clocare.in/wp-content/uploads/2022/12/tailoring.png',
                             onPress: () {
+                               callReuest.comingSoon(context, 'Tailoring Service', "Tailoring services coming soon! Stay tuned for expert alterations and custom fittings.");
                               // serviceDetailScreen(
                               //     serviceName: 'Tailoring', serviceId: 6);
                             },
@@ -219,7 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       //   padding: const EdgeInsets.only(left: 10, right: 10),
                       // child:
                       SizedBox(
-                        height: 160,
+                        height: 180,
                         width: double.infinity,
                         child: CarouselSlider(
                           items: AppAsset.offerImage.map((url) {
@@ -251,17 +268,20 @@ class _HomeScreenState extends State<HomeScreen> {
                             title: 'Quick',
                             icon: 'asset/icons/on-time.png',
                             iconHight: 32,
-                            onTap: () {},
+                            onTap: () {
+                              callReuest.comingSoon(context, 'Quick Service', "Fast service is on its way. Your order will be delivered the same day");
+                            },
                           ),
                           FastBox(
                             title: 'Express',
                             icon: 'asset/icons/express.png',
                             iconHight: 32,
                             onTap: () {
-                              print('dd');
-                              PhonePePaymentGateway phonePePaymentGateway =
-                                  PhonePePaymentGateway();
-                              phonePePaymentGateway.phonePeGateway();
+                              callReuest.comingSoon(context, 'Express Service', "Fast service is on its way. Your order will be delivered the same day");
+                              // print('dd');
+                              // PhonePePaymentGateway phonePePaymentGateway =
+                              //     PhonePePaymentGateway();
+                              // phonePePaymentGateway.phonePeGateway();
                               // phonePeGateway();
                               // Get.to(Stepper1());
                             },
@@ -270,7 +290,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             title: 'Daily',
                             icon: 'asset/icons/24-hours.png',
                             iconHight: 32,
-                            onTap: () {},
+                            onTap: () {
+                              Get.to(const BasketGarmentScreen(), transition: Transition.rightToLeft);
+                            },
                           ),
                         ],
                       ),
@@ -348,12 +370,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ShortcutsBox(
                                       title: 'Help',
                                       icon: IconlyBold.document,
-                                      onTap: () {},
+                                      onTap: () {
+                                       _makePhoneCall();
+                                      },
                                     ),
                                     ShortcutsBox(
                                       title: 'Call Request',
                                       icon: IconlyBold.more_circle,
-                                      onTap: () {},
+                                      onTap: () {
+                                        callReuest.confermationBox(context);
+                                      },
                                     ),
                                     const ShortcutsBox1(
                                       title: ' ',

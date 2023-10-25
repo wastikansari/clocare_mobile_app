@@ -3,9 +3,11 @@ import 'package:clocare/backend/controller/profile_controller.dart';
 import 'package:clocare/backend/model/login_model.dart';
 import 'package:clocare/routes/routes.dart';
 import 'package:clocare/screen/home/home_screen.dart';
+import 'package:clocare/screen/ligal_pages/about_us_page.dart';
 import 'package:clocare/screen/widget/app_bar_widget.dart';
 import 'package:clocare/screen/widget/size_box.dart';
 import 'package:clocare/screen/widget/small_text.dart';
+import 'package:clocare/services/call_reguest.dart';
 import 'package:clocare/utiles/app_constants.dart';
 import 'package:clocare/utiles/themes/ColorConstants.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +24,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   ProfileApi profileApi = ProfileApi();
+  CallReuest callReuest = CallReuest();
   void logout() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     print(prefs.get(AppConstants.TOKEN));
@@ -103,44 +106,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          CircleAvatar(
-                              radius: 30,
-                              backgroundColor: Colors.blueAccent,
-                              child: Padding(
-                                padding: const EdgeInsets.all(12),
-                                child: Center(
-                                    child: SmallText(
-                                  text: userName[0].toString(),
-                                  size: 28,
-                                  color: Colors.white,
+                      child: InkWell(
+                        onTap: () {
+                          Get.toNamed(
+                            Routes.account,
+                          );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            CircleAvatar(
+                                radius: 30,
+                                backgroundColor: Colors.blueAccent,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Center(
+                                      child: SmallText(
+                                    text: userName[0].toString(),
+                                    size: 28,
+                                    color: Colors.white,
+                                  )),
                                 )),
-                              )),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SmallText(
-                                text: userName,
-                                fontweights: FontWeight.w500,
-                                size: 18,
-                                color: Colors.white,
-                              ),
-                              const Height(5),
-                              SmallText(
-                                text: '+91 $phone',
-                                size: 12,
-                                color: Colors.white,
-                              ),
-                            ],
-                          ),
-                        ],
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SmallText(
+                                  text: userName,
+                                  fontweights: FontWeight.w500,
+                                  size: 18,
+                                  color: Colors.white,
+                                ),
+                                const Height(5),
+                                SmallText(
+                                  text: '+91 $phone',
+                                  size: 12,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     )),
                 const Height(30),
@@ -163,9 +173,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        textBox(
-                          title: 'wallet amount',
-                          amount: '$walletBalance',
+                        InkWell(
+                          onTap: () {
+                            Get.toNamed(Routes.wallet);
+                          },
+                          child: textBox(
+                            title: 'Wallet amount',
+                            amount: '$walletBalance',
+                          ),
                         ),
                         Container(
                           height: 50,
@@ -215,7 +230,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             ListTileBox(
-                              title: 'account',
+                              title: 'Account',
                               icon: IconlyLight.profile,
                               onTap: () {
                                 Get.toNamed(
@@ -227,66 +242,137 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               },
                             ),
                             ListTileBox(
-                              title: 'my address',
+                              title: 'My address',
                               icon: IconlyLight.location,
                               onTap: () {
                                 Get.toNamed(Routes.address);
                               },
                             ),
                             ListTileBox(
-                              title: 'orders',
+                              title: 'Orders',
                               icon: IconlyLight.chart,
                               onTap: () {
                                 Get.toNamed(Routes.orders);
                               },
                             ),
                             ListTileBox(
-                              title: 'wallet',
+                              title: 'Wallet',
                               icon: IconlyLight.wallet,
                               onTap: () {
                                 Get.toNamed(Routes.wallet);
                               },
                             ),
                             ListTileBox(
-                              title: 'notification',
+                              title: 'Notification',
                               icon: IconlyLight.notification,
                               onTap: () {
                                 Get.toNamed(Routes.notification);
                               },
                             ),
                             ListTileBox(
-                              title: 'coupons',
+                              title: 'Offers',
                               icon: IconlyLight.bag,
                               onTap: () {
-                                Get.toNamed(Routes.coupons);
+                                // Get.toNamed(Routes.coupons);
+                                Get.toNamed(Routes.offer);
                               },
                             ),
                             ListTileBox(
-                              title: 'refer a earn',
-                              icon: IconlyLight.add_user,
-                              onTap: () {
-                                Get.toNamed(Routes.refer);
-                              },
-                            ),
-                            ListTileBox(
-                              title: 'transactions',
+                              title: 'Transactions',
                               icon: IconlyLight.activity,
                               onTap: () {
                                 Get.toNamed(Routes.transactions);
                               },
                             ),
                             ListTileBox(
-                              title: 'subscriptions',
+                              title: 'Subscriptions',
                               icon: IconlyLight.category,
                               onTap: () {
                                 Get.toNamed(Routes.subscriptions);
                               },
                             ),
                             ListTileBox(
-                              title: 'rate card',
+                              title: 'Rate card',
                               icon: IconlyLight.arrow_right_square,
                               onTap: () {
                                 Get.toNamed(Routes.rateCard);
+                              },
+                            ),
+                            ListTileBox(
+                              title: 'Call Request',
+                              icon: IconlyLight.calling,
+                              onTap: () {
+                                callReuest.confermationBox(context);
+                              },
+                            ),
+                          
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const Height(30),
+                Container(
+                  // height: 200,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(color: Colors.white, width: 1),
+                    color: const Color(0xFFF9F8FF),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColor.boxShadowColor,
+                        blurRadius: 4.0,
+                        spreadRadius: 2.0,
+                        offset: const Offset(0.0, 0.0),
+                      )
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        top: 20, bottom: 20, right: 20, left: 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // SmallText(
+                        //   text: 'SETTING',
+                        //   color: const Color.fromARGB(255, 155, 162, 207),
+                        //   fontweights: FontWeight.w500,
+                        // ),
+                        // const Height(20),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ListTileBox(
+                              title: 'About us',
+                              icon: IconlyLight.work,
+                              onTap: () {                     
+                                Get.to( const AboutScreen(title: 'About us', url: 'https://clocare.in/about-us/?v=c86ee0d9d7ed',), transition: Transition.rightToLeft,);
+                              },
+                            ),
+                            ListTileBox(
+                              title: 'Privacy Policy',
+                              icon: IconlyLight.paper,
+                              onTap: () {
+                               Get.to( const AboutScreen(title: 'Privacy Policy', url: 'https://clocare.in/privacy-policy/?v=c86ee0d9d7ed',), transition: Transition.rightToLeft,);
+                              },
+                            ),
+                          
+                            ListTileBox(
+                              title: 'Terms & Conditions',
+                              icon: IconlyLight.close_square,
+                              onTap: () {
+                               Get.to( const AboutScreen(title: 'Terms & Conditions', url: 'https://clocare.in/terms-conditions/?v=c86ee0d9d7ed',), transition: Transition.rightToLeft,);
+                              },
+                            ),
+                              ListTileBox(
+                              title: 'Send Feedback',
+                              icon: IconlyLight.send,
+                              onTap: () {
+                                Get.to( const AboutScreen(title: 'Send Feedback', url: 'https://docs.google.com/forms/d/e/1FAIpQLSdeoP2H4pgzWA2I18h13wkpgcMz-T22wVDYIJBE4y1PY0LHRQ/viewform?usp=sf_link',), transition: Transition.rightToLeft,);
                               },
                             ),
                             ListTileBox(
@@ -319,6 +405,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 );
                               },
                             ),
+                          
                           ],
                         ),
                       ],
@@ -375,7 +462,7 @@ class textBox extends StatelessWidget {
       ],
     );
   }
-}       
+}
 
 class CustumListTile extends StatelessWidget {
   final String title;
@@ -448,9 +535,14 @@ class ListTileBox extends StatelessWidget {
                   border: Border.all(color: Colors.white, width: 0.1),
                   color: const Color(0xFFe7e7ff),
                 ),
-                child: Icon(
-                  icon,
-                  size: 24,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Icon(
+                      icon,
+                      size: 22,
+                    ),
+                  ),
                 ),
               ),
               const Widths(18),
@@ -458,7 +550,7 @@ class ListTileBox extends StatelessWidget {
                 text: title,
                 size: 15,
                 fontweights: FontWeight.w500,
-                color: AppColor.appBarColor,//Color.fromARGB(189, 0, 0, 0),
+                color: AppColor.appBarColor, //Color.fromARGB(189, 0, 0, 0),
               ),
             ],
           ),

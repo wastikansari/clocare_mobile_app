@@ -17,9 +17,11 @@ import 'package:clocare/screen/profile/subscriptions_screen.dart';
 import 'package:clocare/screen/wallet/transactions_screen.dart';
 import 'package:get/get.dart';
 import '../screen/auth/intro_screen.dart';
+import '../screen/onboarding copy/intro_screen.dart';
 
 abstract class Routes {
   static const String inital = "/"; // splash_screen
+  static const String onBoardingScreen = "/onBoarding_screen";
   static const String intro = "/Intro_screen";
   static const String login = "/login_screen";
   static const String register = "/register_screen";
@@ -44,10 +46,16 @@ class RouteHelper {
     GetPage(
       name: Routes.inital,
       page: () => const SplashScreen(),
+      transition: Transition.circularReveal
+    ),
+    GetPage(
+      name: Routes.onBoardingScreen,
+      page: () => const OnboardingScreen(),
     ),
     GetPage(
       name: Routes.intro,
       page: () => const IntroScreen(),
+      transition: Transition.circularReveal
     ),
     GetPage(
         name: Routes.register,
@@ -61,7 +69,7 @@ class RouteHelper {
         transition: Transition.circularReveal),
     GetPage(
       name: Routes.bottomNavigation,
-      page: () =>  BottomNavigation(),
+      page: () => const BottomNavigation(),
     ),
     GetPage(
         name: Routes.notification,
@@ -86,7 +94,7 @@ class RouteHelper {
         transition: Transition.rightToLeft),
     GetPage(
         name: Routes.transactions,
-        page: () =>  TransactionsScreen(),
+        page: () => TransactionsScreen(),
         transition: Transition.rightToLeft),
     GetPage(
         name: Routes.subscriptions,
@@ -114,9 +122,9 @@ class RouteHelper {
         transition: Transition.rightToLeft),
     GetPage(
         name: Routes.orders,
-        page: () => const OrderScreen(),
+        page: () => OrderScreen(),
         transition: Transition.rightToLeft),
-            GetPage(
+    GetPage(
         name: Routes.offer,
         page: () => const OfferScreen(),
         transition: Transition.rightToLeft)

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:clocare/backend/api/authendication_api.dart';
+import 'package:clocare/routes/routes.dart';
 import 'package:clocare/screen/bottom_navigation/bottom_navigation.dart';
 import 'package:clocare/screen/widget/otp_box.dart';
 import 'package:clocare/utiles/app_asset.dart';
@@ -102,7 +103,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         String token = value.data!.accessToken.toString();
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.setString(AppConstants.TOKEN, token);
-          Get.to(const BottomNavigation());
+        Get.offAllNamed(Routes.bottomNavigation);
+      }else{
+         showCustomSnackBar(title: 'Error', 'Please check your internet.');
       }
     });
   }
@@ -228,7 +231,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               child: Center(
                   child: InkWell(
                 onTap: () {
-                  Get.back();
+                  Get.toNamed(Routes.intro);
                   // setState(() {
                   //   isOtpVisible = false;
                   // });
@@ -253,7 +256,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 left: 0,
                 right: 0,
                 child: Container(
-                  height: MediaQuery.of(context).size.height / 2,
+                  height: MediaQuery.of(context).size.height / 1.8,
                   decoration: const BoxDecoration(
                     color: Color(0xFFEFF1FE),
                     borderRadius: BorderRadius.only(
@@ -273,7 +276,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           fontweights: FontWeight.bold,
                           color: AppColor.primaryColor1,
                         ),
-                        const Height(10),
+                        const Height(20),
                         CustomTextField(
                           hintText: 'Full Name',
                           icon: Icons.person_outline_sharp,
@@ -316,6 +319,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           color: Colors.black,
                           overFlow: TextOverflow.visible,
                         ),
+                         const Height(5),
                         CheckboxListTile(
                           title: RichText(
                             text: TextSpan(
@@ -391,6 +395,52 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             onPressed: () {
                               _getOtp();
                             }),
+                        const Height(25),
+                        Align(
+                          alignment: Alignment.center,
+                          child: RichText(
+                            textAlign: TextAlign.left,
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: "Already have an account? ",
+                                  style: TextStyle(
+                                    color: AppColor.appBarColor,
+                                    fontSize: size.height * 0.018,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                WidgetSpan(
+                                  child: InkWell(
+                                    onTap: () {
+                                      Get.toNamed(Routes.login);
+                                    },
+                                    child: Text(
+                                      // "Register",
+                                      "Login",
+                                      style: TextStyle(
+                                        decoration: TextDecoration.underline,
+                                        decorationColor: AppColor.primaryColor2,
+                                        foreground: Paint()
+                                          ..shader = const LinearGradient(
+                                            colors: <Color>[
+                                              Color(0xFF174FA2),
+                                              Color(0xFF57B1E3),
+                                            ],
+                                          ).createShader(
+                                            const Rect.fromLTWH(
+                                                0.0, 0.0, 200.0, 70.0),
+                                          ),
+                                        fontSize: size.height * 0.018,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),

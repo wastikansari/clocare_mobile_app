@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 class PackagePaymentPage extends StatefulWidget {
   final String amount;
-  final Function(String) callback;
+  final Function(Map) callback;
   const PackagePaymentPage(
       {super.key, required this.callback, required this.amount});
 
@@ -23,7 +23,11 @@ class _PackagePaymentPageState extends State<PackagePaymentPage> {
 
   void sendDataToParent() {
     setState(() {
-      widget.callback(selectPayType);
+      Map data = {
+        'selectPayType': selectPayType,
+        'wallet_balances': walletBalances,
+      };
+      widget.callback(data);
     });
   }
 
@@ -45,6 +49,49 @@ class _PackagePaymentPageState extends State<PackagePaymentPage> {
         padding: const EdgeInsets.only(top: 35, left: 15, right: 15),
         child: Column(
           children: [
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.white, width: 1),
+                color: //const Color.fromARGB(106, 239, 241, 254),
+                    const Color(0xFFF9F8FF),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColor.boxShadowColor,
+                    blurRadius: 4.0,
+                    spreadRadius: 2.0,
+                    offset: const Offset(0.0, 0.0),
+                  )
+                ],
+              ),
+              // decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(10),
+              //     color: const Color.fromARGB(106, 239, 241, 254),
+              //     border: Border.all(
+              // color: const Color.fromARGB(39, 68, 137, 255))),
+              child: Padding(
+                padding: const EdgeInsets.all(18),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SmallText(
+                      text: 'Total Pay',
+                      color: AppColor.primaryColor1,
+                      size: 14,
+                      fontweights: FontWeight.w500,
+                    ),
+                    SmallText(
+                      text: '₹${double.parse(widget.amount)}',
+                      color: AppColor.primaryColor1,
+                      size: 14,
+                      fontweights: FontWeight.w500,
+                    ),
+                  ],
+                ),
+              ),
+            ),
             const Height(20),
             Container(
                 width: double.infinity,

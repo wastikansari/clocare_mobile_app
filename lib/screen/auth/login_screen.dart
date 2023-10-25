@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:clocare/backend/api/authendication_api.dart';
 import 'package:clocare/backend/controller/profile_controller.dart';
+import 'package:clocare/routes/routes.dart';
 import 'package:clocare/screen/bottom_navigation/bottom_navigation.dart';
 import 'package:clocare/screen/widget/otp_box.dart';
 import 'package:clocare/utiles/app_asset.dart';
@@ -46,12 +47,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Timer? _timer;
   int otpget = 0;
   String shortNum = '0';
-
-  @override
-  void dispose() {
-    phoneController.dispose();
-    super.dispose();
-  }
 
   void startTimer() {
     const oneSec = Duration(seconds: 1);
@@ -107,7 +102,8 @@ class _LoginScreenState extends State<LoginScreen> {
           isLoginLoading = false;
         });
         Get.find<ProfileController>().getProfileData();
-        Get.to(const BottomNavigation());
+        // Get.to(const BottomNavigation());
+        Get.offAllNamed(Routes.bottomNavigation);
       } else {
         setState(() {
           isLoginLoading = false;
@@ -233,7 +229,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Center(
                   child: InkWell(
                 onTap: () {
-                  Get.back();
+                  Get.toNamed(Routes.intro);
                   // setState(() {
                   //   isOtpVisible = false;
                   // });
@@ -325,7 +321,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           color: Colors.black,
                           overFlow: TextOverflow.visible,
                         ),
-                        const Height(60),
+                        const Height(45),
                         ButtonWidget(
                             text: "GET OTP",
                             isLoding: isLoginLoading,
@@ -335,6 +331,51 @@ class _LoginScreenState extends State<LoginScreen> {
                             onPressed: () {
                               getOtp();
                             }),
+                        const Height(25),
+                        Align(
+                          alignment: Alignment.center,
+                          child: RichText(
+                            textAlign: TextAlign.left,
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: "Don’t have an account yet? ",
+                                  style: TextStyle(
+                                    color: AppColor.appBarColor,
+                                    fontSize: size.height * 0.018,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                WidgetSpan(
+                                  child: InkWell(
+                                    onTap: () {
+                                      Get.toNamed(Routes.register);
+                                    },
+                                    child: Text(
+                                      "Register",
+                                      style: TextStyle(
+                                        decoration: TextDecoration.underline,
+                                        decorationColor: AppColor.primaryColor2,
+                                        foreground: Paint()
+                                          ..shader = const LinearGradient(
+                                            colors: <Color>[
+                                              Color(0xFF174FA2),
+                                              Color(0xFF57B1E3),
+                                            ],
+                                          ).createShader(
+                                            const Rect.fromLTWH(
+                                                0.0, 0.0, 200.0, 70.0),
+                                          ),
+                                        fontSize: size.height * 0.018,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),

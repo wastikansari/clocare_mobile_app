@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:clocare/backend/api/address_api.dart';
 import 'package:clocare/backend/api/order_api.dart';
 import 'package:clocare/routes/routes.dart';
@@ -11,7 +10,7 @@ import 'package:clocare/screen/widget/app_bar_widget.dart';
 import 'package:clocare/screen/widget/bottom_navigation_btn.dart';
 import 'package:clocare/screen/widget/show_custom_snackbar.dart';
 import 'package:clocare/screen/widget/small_text.dart';
-import 'package:clocare/testing.dart';
+import 'package:clocare/screen/widget/custom_dialog.dart';
 import 'package:clocare/utiles/app_asset.dart';
 import 'package:clocare/utiles/themes/ColorConstants.dart';
 import 'package:clocare/screen/widget/size_box.dart';
@@ -38,7 +37,7 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
   OrderApi orderApi = OrderApi();
   int isSelectAddress = -1;
   bool isVisibal = false;
-  final int _counter = 0;
+  int _counter = 0;
   String currentMonthe = '';
   int isSelectPickupDate = 0;
   int isSelectTimePickupSlot = 1;
@@ -171,12 +170,12 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
               pageSwipe: false,
               formValidation: true,
               customSteps: const [
-                CustomSteps(stepsIcon: IconlyLight.buy, title: "order"),
+                CustomSteps(stepsIcon: IconlyLight.buy, title: "Order"),
                 CustomSteps(
-                    stepsIcon: Icons.location_on_outlined, title: "address"),
-                CustomSteps(stepsIcon: Icons.history, title: "p/d slot"),
-                CustomSteps(stepsIcon: Icons.outbox_rounded, title: "sumary"),
-                CustomSteps(stepsIcon: Icons.wallet, title: "payment"),
+                    stepsIcon: Icons.location_on_outlined, title: "Address"),
+                CustomSteps(stepsIcon: Icons.history, title: "P/D slot"),
+                CustomSteps(stepsIcon: Icons.outbox_rounded, title: "Details"),
+                CustomSteps(stepsIcon: Icons.wallet, title: "   pay"),
               ],
               stepperBodyWidget: [
                 stepAddClothes(),
@@ -541,7 +540,12 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                                 fontweights: FontWeight.bold,
                               ),
                               const Height(3),
-                              SmallText(text: '$_counter items'),
+                              SmallText(
+                                text: '$_counter items',
+                                color: _counter == 0
+                                    ? Colors.grey
+                                    : AppColor.primaryColor1,
+                              ),
                             ],
                           ),
                         ],
@@ -570,6 +574,11 @@ class _ServiceDetailScreenState extends State<ServiceDetailScreen> {
                         //   color: Colors.blueAccent,
                         //   fontweights: FontWeight.bold,
                         // ),
+                        onChanged: (valu) {
+                          setState(() {
+                            _counter = int.parse(valu!);
+                          });
+                        },
                         hintTexts: 'e.g 12',
                         validator: (value) {
                           print('dddddddddddd $value');

@@ -118,7 +118,7 @@ class OrderSummaryPage extends StatelessWidget {
                       child: Container(
                           decoration: BoxDecoration(
                               // color: AppColor.primaryColor1,
-                              color: Color.fromARGB(106, 239, 241, 254),
+                              color: const Color.fromARGB(106, 239, 241, 254),
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
                                   color: const Color.fromARGB(39, 68, 137, 255))
@@ -260,7 +260,7 @@ class BasketSummaryPage extends StatelessWidget {
                   padding: const EdgeInsets.all(15),
                   child: Column(children: [
                     TextBox(
-                      title: 'Total items',
+                      title: 'No of Clothes',
                       value: totalItems,
                     ),
                     const Height(8),
@@ -274,7 +274,7 @@ class BasketSummaryPage extends StatelessWidget {
                     ),
                     const Height(8),
                     TextBox(
-                      title: 'Basket amount',
+                      title: 'Order amount',
                       value: basketAmount,
                     ),
                     const Height(8),

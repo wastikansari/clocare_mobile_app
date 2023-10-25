@@ -98,7 +98,7 @@ class AddBasketBox extends StatelessWidget {
                     stepsIcon: Icons.location_on_outlined, title: "Address"),
                 CustomSteps(stepsIcon: Icons.history, title: "P/D Slot"),
                 CustomSteps(stepsIcon: Icons.outbox_rounded, title: "Details"),
-                CustomSteps(stepsIcon: Icons.wallet, title: "Payment"),
+                CustomSteps(stepsIcon: Icons.wallet, title: "   Pay"),
               ],
               step: StepA(
                   currentStepColor: Colors.green,
